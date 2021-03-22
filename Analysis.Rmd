@@ -1,0 +1,226 @@
+---
+title: "Assignment 1"
+author: "Muhammad Uzair Aslam (18097) , Mustafa Shamim(PUT YOUR ERP),Sahad Moorani(PUT YOUR ERP)"
+date: "3/20/2021"
+output: html_document
+---
+@sahad please make the overall document presentable by adding the problem statement, motivation for study and Results in LATEX form. Make Null and ALTERNATIVE of all the tests by writing the equations in MATHEMATICAL FORM given by SIR.
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{r}
+library(ggplot2)
+library(TSstudio)
+library(forecast)
+library(tseries)
+```
+```{r}
+#clear global environment
+rm(list = ls())
+
+#below function reads the data from csv file
+read_data <- function(){
+        data <- read.csv("AEdata.csv")
+        return(data)
+}
+```
+```{r}
+#below function converts the cpi into time series form
+convert_cpi_to_ts <- function(){
+        data <- read_data()
+        cpi <- data$CPI
+        cpi <- ts(cpi,frequency=12, start=c(1991,1))
+        return(cpi)
+}
+```
+
+
+```{r}
+#function to convert function argument to String
+myfunc <- function(v1) {
+  deparse(substitute(v1))
+}
+```
+
+```{r}
+#below function converts the m2 into time series form
+convert_m2_to_ts <- function(series){
+        data <- read_data()
+        m2 <- data$M2
+        m2 <- ts(m2,frequency=12, start=c(1991,1))
+        return(m2)
+}
+```
+```{r}
+#create instance of cpi and m2
+cpi <- convert_cpi_to_ts()
+m2  <- convert_m2_to_ts()
+```
+
+```{r}
+#below function plots the cpi series in Time Series Studio
+plot_cpi<- function(){
+        #get cpi
+        cpi <- convert_cpi_to_ts()
+        
+        #plot cpi
+        p <-    ts_plot(cpi,
+                title = "Line graph of CPI (January 1991- February 2021)",
+                Xtitle = "Years",
+                Ytitle = myfunc(series),
+                line.mode = "lines",
+                slider = TRUE,
+                Xgrid = TRUE,
+                Ygrid = TRUE)
+        return(p)
+}
+```
+```{r}
+plot_cpi()
+```
+
+```{r}
+#below function plots the m2 series in Time Series Studio
+plot_m2<- function(){
+        #get m2
+        m2 <- convert_m2_to_ts()
+        
+        #plot m2
+        p <-    ts_plot(m2,
+                        title = "Line graph of M2(January 1991- February 2021)",
+                        Xtitle = "Years",
+                        Ytitle = "M2",
+                        line.mode = "lines",
+                        slider = TRUE,
+                        Xgrid = TRUE,
+                        Ygrid = TRUE,
+                        color = "Red")
+        return(p)
+}
+```
+```{r}
+plot_m2()
+```
+The M2 money supply shows a constant increase with respect to time. This means that coins and currency in circulation,Savings deposits and Money Market funds have increased with time. 
+```{r}
+cpi_decompose_plot <- function(){
+        cpi<- convert_cpi_to_ts()
+        p <- ts_decompose(cpi, type = "both")
+        return(p)
+}
+```
+```{r}
+cpi_decompose_plot()
+```
+Trend part in CPI is consistently upward and it does not satisfy mean reversion property because the mean CPI tends to change upward.Thus this is the non Stationary Series. Furthemore, there is a clear Seasonsal trend in CPI. We can also see that in global crises there is a shock in Prices as CPI as CPI increased by 34.25% between 2007 and 2009. To further motivate,we made Seasonality plots to explore seasonal effects in CPI
+```{r}
+cpi_seasonal_plot<- function()
+{
+        cpi<- convert_cpi_to_ts()
+        p <- ts_seasonal(cpi)
+        return(p)
+}
+```
+```{r}
+cpi_seasonal_plot()
+```
+The plot reveals interesting patterns in CPI. Firstly we analyze that inflation has increased by more than double in last decade. In 2010 January Pakistan's CPI was 63.61 which rose to 132.77 in 2020 January. This is 108% increase in CPI between the decade.The rise of inflation has been fueled up after 2015 which can be seen from the plot.
+
+```{r}
+m2_decompose_plot <- function(){
+        m2<- convert_m2_to_ts()
+        p <- ts_decompose(m2, type = "both")
+        return(p)
+}
+```
+```{r}
+m2_decompose_plot()
+```
+Explaination of decomposition M2: PLEASE EXPLAIn THE PATTERNS @mustafa
+
+```{r}
+m2_seasonal_plot<- function()
+{
+        m2<- convert_m2_to_ts()
+        p <- ts_seasonal(m2)
+        return(p)
+}
+```
+```{r}
+m2_seasonal_plot()
+```
+Explaination of M2 seasonality plot : Please explain Patterns @mustafa
+
+DETERMINATION OF UNIT ROOTS
+TECHNIQUE 1 : VISUALISING BY ACF AND PACF
+Next we move on to find the acf and pacf of the series.The motivation is to find the stationarity of the series. So we plot them one by one
+
+```{r}
+plot_acf_pacf <- function(series)
+{
+        p <- ts_cor(series)
+        return(p)
+}
+```
+```{r}
+plot_acf_pacf(cpi)
+```
+The ACF plot shows that CPI series is not Stationary since most of the spikes are out of 5% significant level. This means that mean,variance and covariances are time dependent.
+
+@sahad please document and write the formula for DF with Null and Alternate for all the tests. USE LATEX as taught by Sir in class. Make the overall document professional and presentable.
+
+AUGMENTED DF on CPI
+```{r}
+#application of DF test on cpi
+#H0: φ = 1 there is a unit root
+#H1: φ < 1 the series is stationary 
+adf_on_series <- function(series)
+{
+        test <- adf.test(series)
+        test
+}
+```
+```{r}
+adf_on_series(cpi)
+
+```
+We do not reject H0 and conclude that CPI series is a unit root in our series. We next find how many times we will have to take difference of CPI to make it Stationary
+```{r}
+ndiffs(cpi)
+```
+Now we make a function which would take difference of the cpi two times and apply the ADF test on it
+```{r}
+diff_2<- function(series)
+{
+        two_times_difference <- diff(diff(series))
+        two_times_difference
+}
+```
+```{r}
+#now apply adf on difference = 2
+adf_on_series(diff_2(cpi))
+```
+Thus we reject H0 and conclude that the series is stationary for CPI at I(2). Let's plot its ACF and PACF to confirm the stationarity of the series
+```{r}
+plot_acf_pacf(diff_2(cpi))
+```
+This confirms that we have sucessfully transferred a non stationary process to Stationary. @mustafa analyze the lags and make comments here.
+
+Similarly for M2 series we plot the ACF and PACF
+```{r}
+plot_acf_pacf(m2)
+```
+We check its stationary point. @mustafa comment on the lags of m2
+```{r}
+ndiffs(m2)
+```
+This means we have to difference it twice to make it stationary.
+```{r}
+adf_on_series(diff_2(m2))
+```
+We reject H0 and conclude that M2 is stationary.
+
+```{r}
+plot_acf_pacf(diff_2(m2))
+```
+The ACF and PACF functions tells that the M2 series is now Stationary. Thus it is a I(2) process.@mustafa comment on lags here.
