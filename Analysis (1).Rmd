@@ -1,0 +1,602 @@
+---
+title: "Assignment 1"
+author: "Muhammad Uzair Aslam (18097) , Mustafa Shamim(PUT YOUR ERP),Sahad Moorani(PUT YOUR ERP)"
+date: "3/20/2021"
+output: html_document
+---
+@sahad please make the overall document presentable by adding the problem statement, motivation for study and Results in LATEX form. Make Null and ALTERNATIVE of all the tests by writing the equations in MATHEMATICAL FORM given by SIR.
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{r}
+suppressWarnings({ 
+library(ggplot2)
+library(TSstudio)
+library(forecast)
+library(tseries)
+library(Hmisc)
+library(urca)
+   })
+```
+```{r}
+#clear global environment
+rm(list = ls())
+
+#below function reads the data from csv file
+read_data <- function(){
+        data <- read.csv("AEdata.csv")
+        return(data)
+}
+data<- read_data()
+describe(data)
+
+```
+```{r}
+#below function converts the cpi into time series form
+convert_cpi_to_ts <- function(){
+        data <- read_data()
+        cpi <- data$CPI
+        cpi <- ts(cpi,frequency=12, start=c(1991,1))
+        return(cpi)
+}
+```
+```{r}
+#below function converts the exports into time series form
+convert_exports_to_ts <- function(){
+        data <- read_data()
+        exports <- data$Exports
+        exports <- ts(exports,frequency=12, start=c(1991,1))
+        return(exports)
+}
+```
+
+```{r}
+#below function converts the m2 into time series form
+convert_m2_to_ts <- function(series){
+        data <- read_data()
+        m2 <- data$M2
+        m2 <- ts(m2,frequency=12, start=c(1991,1))
+        return(m2)
+}
+```
+```{r}
+#create instance of cpi and m2
+cpi <- convert_cpi_to_ts()
+m2  <- convert_m2_to_ts()
+exports <- convert_exports_to_ts()
+```
+
+```{r}
+#below function plots the cpi series in Time Series Studio
+plot_cpi<- function(timeseries){
+        #get cpi
+        cpi <- convert_cpi_to_ts()
+        
+        #plot cpi
+        p <-    ts_plot(cpi,
+                title = "Line graph of CPI (January 1991- February 2021)",
+                Xtitle = "Years",
+                Ytitle = "CPI %",
+                line.mode = "lines",
+                slider = TRUE,
+                Xgrid = TRUE,
+                Ygrid = TRUE)
+        return(p)
+}
+```
+```{r}
+plot_cpi()
+```
+
+```{r}
+#below function plots the m2 series in Time Series Studio
+plot_m2<- function(){
+        #get m2
+        m2 <- convert_m2_to_ts()
+        
+        #plot m2
+        p <-    ts_plot(m2,
+                        title = "Line graph of M2(January 1991- February 2021)",
+                        Xtitle = "Years",
+                        Ytitle = "M2",
+                        line.mode = "lines",
+                        slider = TRUE,
+                        Xgrid = TRUE,
+                        Ygrid = TRUE,
+                        color = "Red")
+        return(p)
+}
+```
+```{r}
+plot_m2()
+```
+The M2 money supply shows a constant increase with respect to time. This means that coins and currency in circulation,Savings deposits and Money Market funds have increased with time. 
+```{r}
+plot_exports<- function(){
+        #get m2
+        exports <-  convert_exports_to_ts()
+        
+        #plot m2
+        p <-    ts_plot(exports,
+                        title = "Line graph of Exports(January 1991- February 2021)",
+                        Xtitle = "Years",
+                        Ytitle = "Exports",
+                        line.mode = "lines",
+                        slider = TRUE,
+                        Xgrid = TRUE,
+                        Ygrid = TRUE,
+                        color = "Green")
+        return(p)
+}
+```
+```{r}
+plot_exports()
+```
+The exports show fluctuation between 1991 to 2020. @mustafa continue the analysis.
+
+
+```{r}
+ts_decompose(cpi, type = "both")
+```
+Trend part in CPI is consistently upward and it does not satisfy mean reversion property because the mean CPI tends to change upward.Thus this is the non Stationary Series. Furthemore, there is a clear Seasonsal trend in CPI. We can also see that in global crises there is a shock in Prices as CPI as CPI increased by 34.25% between 2007 and 2009. To further motivate,we made Seasonality plots to explore seasonal effects in CPI
+```{r}
+ts_decompose(m2, type = "both")
+```
+```{r}
+ts_decompose(exports, type = "both")
+```
+
+```{r}
+ts_seasonal(cpi)
+```
+The plot reveals interesting patterns in CPI. Firstly we analyze that inflation has increased by more than double in last decade. In 2010 January Pakistan's CPI was 63.61 which rose to 132.77 in 2020 January. This is 108% increase in CPI between the decade.The rise of inflation has been fueled up after 2015 which can be seen from the plot.
+```{r}
+ts_seasonal(m2)
+```
+
+Explaination of decomposition Seasonality: PLEASE EXPLAIn THE PATTERNS @mustafa
+
+```{r}
+ts_seasonal(exports)
+```
+
+Explaination of Exports plot : Please explain Patterns @mustafa
+
+DETERMINATION OF UNIT ROOTS
+TECHNIQUE 1 : VISUALISING BY ACF AND PACF
+Next we move on to find the acf and pacf of the series.The motivation is to find the stationarity of the series. So we plot them one by one
+
+```{r}
+ts_cor(cpi)
+```
+The ACF plot shows that CPI series is not Stationary since most of the spikes are out of 5% significant level. This means that mean,variance and covariances are time dependent.
+
+@sahad please document and write the formula for DF with Null and Alternate for all the tests. USE LATEX as taught by Sir in class. Make the overall document professional and presentable.
+
+AUGMENTED DF on CPI
+```{r}
+#we make a function which would take difference of the series two times
+diff_2<- function(series)
+{
+         return(diff(diff(series)))
+}
+```
+
+```{r}
+#application of ADF test on cpi with trend and intercept
+#H0: Ï = 1 there is a unit root
+#H1: Ï < 1 the series is stationary
+CPI_adf_level=adf.test(cpi)
+CPI_adf_level
+```
+
+
+```{r}
+## ---------------------------------------------------------------------------------
+ndiffs(cpi)
+```
+
+
+```{r}
+## ---------------------------------------------------------------------------------
+#now apply adf on second difference with trend and intercept
+CPI_adf_diff2=adf.test(diff_2(cpi))
+CPI_adf_diff2
+```
+
+
+```{r}
+## ---------------------------------------------------------------------------------
+#application of Dickey fuller on level with no trend and no intercept
+CPI_df_type1=ur.df(cpi, type = c("none"), lags = 0, selectlags = c("Fixed"))
+CPI_df_type1
+## ---------------------------------------------------------------------------------
+```
+
+
+```{r}
+#application of Dickey fuller on level with trend and intercept
+CPI_df_type3 <- urca::ur.df(cpi, type = "trend", lags = 0, selectlags = c("Fixed"))
+urca::summary(CPI_df_type3)
+
+## ---------------------------------------------------------------------------------
+```
+
+
+```{r}
+#application of Dickey fuller on second difference with trend and intercept
+CPI_df_type3_diff2 <- urca::ur.df(diff_2(cpi), type = "trend", lags = 0, selectlags = c("Fixed"))
+urca::summary(CPI_df_type3_diff2)
+
+## ---------------------------------------------------------------------------------
+```
+
+
+```{r}
+#application of Dickey fuller on level with intercept but no trend
+CPI_df_type2 <- urca::ur.df(cpi, type = "drift", lags = 0, selectlags = c("Fixed"))
+urca::summary(CPI_df_type2)
+
+
+## ---------------------------------------------------------------------------------
+```
+
+
+```{r}
+#application of Augmented Dickey fuller on second difference
+CPI_df_diff2 <- ur.df(diff_2(cpi), type = c("none"), lags = 0, selectlags = c("Fixed"))
+CPI_df_diff2
+
+## ---------------------------------------------------------------------------------
+```
+
+
+```{r}
+#applying KPSS on level
+CPI_kpss_level <- kpss.test(cpi, null="Trend")
+CPI_kpss_level
+```
+
+
+```{r}
+## ---------------------------------------------------------------------------------
+#applying KPSS on difference 2
+CPI_kpss_diff2 <- kpss.test(diff_2(cpi), null="Trend")
+CPI_kpss_diff2
+
+
+## ---------------------------------------------------------------------------------
+```
+
+
+```{r}
+#applying ERS test for serial correlation on level
+CPI_ers_level <- ur.ers(cpi, type="P-test", model="trend")
+summary(CPI_ers_level)
+
+## ---------------------------------------------------------------------------------
+```
+
+
+```{r}
+#applying ERS test for serial correlation on difference 2
+CPI_ers_diff2 <- ur.ers(diff_2(cpi), type="P-test", model="trend")
+summary(CPI_ers_diff2)
+
+## ---------------------------------------------------------------------------------
+```
+
+
+```{r}
+#applying ELS to detrended data without intercept on level
+CPI_ers_detrend <- ur.ers(cpi, type="DF-GLS", model="trend")
+summary(CPI_ers_detrend)
+
+## ---------------------------------------------------------------------------------
+```
+
+
+```{r}
+#applying ELS to detrended data without intercept on difference
+CPI_ers_detrend_diff1 <- ur.ers(diff(cpi), type="DF-GLS", model="trend")
+summary(CPI_ers_detrend_diff1)
+
+## ---------------------------------------------------------------------------------
+```
+
+
+```{r}
+#applying Phillip and Perron test on level
+CPI_pp_level <- pp.test(cpi)
+CPI_pp_level
+
+## ---------------------------------------------------------------------------------
+```
+
+
+```{r}
+#applying Phillip and Perron test on difference 2
+CPI_pp_diff2 <- pp.test(diff_2(cpi))
+CPI_pp_diff2
+## ---------------------------------------------------------------------------------
+```
+
+
+```{r}
+#Performs the Zivot \& Andrews unit root test, which allows a break at an unknown point in either the intercept, the linear trend or in both.
+#performing on level
+# H0 :yt =Î¼+ytâ1 +Îµt
+CPI_az_level <- ur.za(cpi , model="both", lag=2)
+summary(CPI_az_level)
+
+
+## ---------------------------------------------------------------------------------
+#plotting on level
+plot(CPI_az_level)
+
+
+## ---------------------------------------------------------------------------------
+```
+
+
+```{r}
+#Performs the Zivot \& Andrews unit root test, which allows a break at an unknown point in either the intercept, the linear trend or in both.
+#performing on difference 2
+# H0 :yt =Î¼+ytâ1 +Îµt
+CPI_az_diff2 <- ur.za(diff_2(cpi) , model="both", lag=2)
+summary(CPI_az_diff2)
+
+
+## ---------------------------------------------------------------------------------
+#at difference of 2 that is stationary
+plot(CPI_az_diff2)
+
+
+## ---------------------------------------------------------------------------------
+```
+
+
+```{r}
+ts_cor(diff_2(cpi))
+
+
+## ---------------------------------------------------------------------------------
+```
+
+
+```{r}
+ts_cor(m2)
+
+
+## ---------------------------------------------------------------------------------
+ndiffs(m2)
+
+
+#application of ADF test on m2 with trend and intercept
+#H0: Ï = 1 there is a unit root
+#H1: Ï < 1 the series is stationary
+m2_adf_level=adf.test(m2)
+m2_adf_level
+
+## ---------------------------------------------------------------------------------
+ndiffs(m2)
+
+## ---------------------------------------------------------------------------------
+#now apply adf on second difference with trend and intercept
+m2_adf_diff2=adf.test(diff_2(m2))
+m2_adf_diff2
+
+## ---------------------------------------------------------------------------------
+#application of Dickey fuller on level with no trend and no intercept
+m2_df_type1=ur.df(m2, type = c("none"), lags = 0, selectlags = c("Fixed"))
+m2_df_type1
+## ---------------------------------------------------------------------------------
+#application of Dickey fuller on level with trend and intercept
+m2_df_type3 <- urca::ur.df(m2, type = "trend", lags = 0, selectlags = c("Fixed"))
+urca::summary(m2_df_type3)
+
+## ---------------------------------------------------------------------------------
+#application of Dickey fuller on second difference with trend and intercept
+m2_df_type3_diff2 <- urca::ur.df(diff_2(m2), type = "trend", lags = 0, selectlags = c("Fixed"))
+urca::summary(m2_df_type3_diff2)
+
+## ---------------------------------------------------------------------------------
+#application of Dickey fuller on level with intercept but no trend
+m2_df_type2 <- urca::ur.df(m2, type = "drift", lags = 0, selectlags = c("Fixed"))
+urca::summary(m2_df_type2)
+
+
+## ---------------------------------------------------------------------------------
+#application of Augmented Dickey fuller on second difference
+m2_df_diff2 <- ur.df(diff_2(m2), type = c("none"), lags = 0, selectlags = c("Fixed"))
+m2_df_diff2
+
+## ---------------------------------------------------------------------------------
+#applying KPSS on level
+m2_kpss_level <- kpss.test(m2, null="Trend")
+m2_kpss_level
+
+
+## ---------------------------------------------------------------------------------
+#applying KPSS on difference 2
+m2_kpss_diff2 <- kpss.test(diff_2(m2), null="Trend")
+m2_kpss_diff2
+
+
+## ---------------------------------------------------------------------------------
+#applying ERS test for serial correlation on level
+m2_ers_level <- ur.ers(m2, type="P-test", model="trend")
+summary(m2_ers_level)
+
+## ---------------------------------------------------------------------------------
+#applying ERS test for serial correlation on difference 2
+m2_ers_diff2 <- ur.ers(diff_2(m2), type="P-test", model="trend")
+summary(m2_ers_diff2)
+
+## ---------------------------------------------------------------------------------
+#applying ELS to detrended data without intercept on level
+m2_ers_detrend <- ur.ers(m2, type="DF-GLS", model="trend")
+summary(m2_ers_detrend)
+
+## ---------------------------------------------------------------------------------
+#applying ELS to detrended data without intercept on difference
+m2_ers_detrend_diff1 <- ur.ers(diff(m2), type="DF-GLS", model="trend")
+summary(m2_ers_detrend_diff1)
+
+## ---------------------------------------------------------------------------------
+#applying Phillip and Perron test on level
+m2_pp_level <- pp.test(m2)
+m2_pp_level
+
+## ---------------------------------------------------------------------------------
+#applying Phillip and Perron test on difference 2
+m2_pp_diff2 <- pp.test(diff_2(m2))
+m2_pp_diff2
+## ---------------------------------------------------------------------------------
+#Performs the Zivot \& Andrews unit root test, which allows a break at an unknown point in either the intercept, the linear trend or in both.
+#performing on level
+# H0 :yt =Î¼+ytâ1 +Îµt
+m2_az_level <- ur.za(m2 , model="both", lag=2)
+summary(m2_az_level)
+
+
+## ---------------------------------------------------------------------------------
+#plotting on level
+plot(m2_az_level)
+
+
+## ---------------------------------------------------------------------------------
+#Performs the Zivot \& Andrews unit root test, which allows a break at an unknown point in either the intercept, the linear trend or in both.
+#performing on difference 2
+# H0 :yt =Î¼+ytâ1 +Îµt
+m2_az_diff2 <- ur.za(diff_2(m2) , model="both", lag=2)
+summary(m2_az_diff2)
+
+
+## ---------------------------------------------------------------------------------
+#at difference of 2 that is stationary
+plot(m2_az_diff2)
+
+
+## ---------------------------------------------------------------------------------
+ts_cor(diff_2(m2))
+```
+
+
+```{r}
+ts_cor(exports)
+
+
+## ---------------------------------------------------------------------------------
+ndiffs(exports)
+
+
+
+#application of ADF test on exports with trend and intercept
+#H0: Ï = 1 there is a unit root
+#H1: Ï < 1 the series is stationary
+exports_adf_level=adf.test(exports)
+exports_adf_level
+
+## ---------------------------------------------------------------------------------
+ndiffs(exports)
+
+## ---------------------------------------------------------------------------------
+#now apply adf on second difference with trend and intercept
+exports_adf_diff2=adf.test(diff_2(exports))
+exports_adf_diff2
+
+## ---------------------------------------------------------------------------------
+#application of Dickey fuller on level with no trend and no intercept
+exports_df_type1=ur.df(exports, type = c("none"), lags = 0, selectlags = c("Fixed"))
+exports_df_type1
+## ---------------------------------------------------------------------------------
+#application of Dickey fuller on level with trend and intercept
+exports_df_type3 <- urca::ur.df(exports, type = "trend", lags = 0, selectlags = c("Fixed"))
+urca::summary(exports_df_type3)
+
+## ---------------------------------------------------------------------------------
+#application of Dickey fuller on second difference with trend and intercept
+exports_df_type3_diff2 <- urca::ur.df(diff_2(exports), type = "trend", lags = 0, selectlags = c("Fixed"))
+urca::summary(exports_df_type3_diff2)
+
+## ---------------------------------------------------------------------------------
+#application of Dickey fuller on level with intercept but no trend
+exports_df_type2 <- urca::ur.df(exports, type = "drift", lags = 0, selectlags = c("Fixed"))
+urca::summary(exports_df_type2)
+
+
+## ---------------------------------------------------------------------------------
+#application of Augmented Dickey fuller on second difference
+exports_df_diff2 <- ur.df(diff_2(exports), type = c("none"), lags = 0, selectlags = c("Fixed"))
+exports_df_diff2
+
+## ---------------------------------------------------------------------------------
+#applying KPSS on level
+exports_kpss_level <- kpss.test(exports, null="Trend")
+exports_kpss_level
+
+
+## ---------------------------------------------------------------------------------
+#applying KPSS on difference 2
+exports_kpss_diff2 <- kpss.test(diff_2(exports), null="Trend")
+exports_kpss_diff2
+
+
+## ---------------------------------------------------------------------------------
+#applying ERS test for serial correlation on level
+exports_ers_level <- ur.ers(exports, type="P-test", model="trend")
+summary(exports_ers_level)
+
+## ---------------------------------------------------------------------------------
+#applying ERS test for serial correlation on difference 2
+exports_ers_diff2 <- ur.ers(diff_2(exports), type="P-test", model="trend")
+summary(exports_ers_diff2)
+
+## ---------------------------------------------------------------------------------
+#applying ELS to detrended data without intercept on level
+exports_ers_detrend <- ur.ers(exports, type="DF-GLS", model="trend")
+summary(exports_ers_detrend)
+
+## ---------------------------------------------------------------------------------
+#applying ELS to detrended data without intercept on difference
+exports_ers_detrend_diff1 <- ur.ers(diff(exports), type="DF-GLS", model="trend")
+summary(exports_ers_detrend_diff1)
+
+## ---------------------------------------------------------------------------------
+#applying Phillip and Perron test on level
+exports_pp_level <- pp.test(exports)
+exports_pp_level
+
+## ---------------------------------------------------------------------------------
+#applying Phillip and Perron test on difference 2
+exports_pp_diff2 <- pp.test(diff_2(exports))
+exports_pp_diff2
+## ---------------------------------------------------------------------------------
+#Performs the Zivot \& Andrews unit root test, which allows a break at an unknown point in either the intercept, the linear trend or in both.
+#performing on level
+# H0 :yt =Î¼+ytâ1 +Îµt
+exports_az_level <- ur.za(exports , model="both", lag=2)
+summary(exports_az_level)
+
+
+## ---------------------------------------------------------------------------------
+#plotting on level
+plot(exports_az_level)
+
+
+## ---------------------------------------------------------------------------------
+#Performs the Zivot \& Andrews unit root test, which allows a break at an unknown point in either the intercept, the linear trend or in both.
+#performing on difference 2
+# H0 :yt =Î¼+ytâ1 +Îµt
+exports_az_diff2 <- ur.za(diff_2(exports) , model="both", lag=2)
+summary(exports_az_diff2)
+
+
+## ---------------------------------------------------------------------------------
+#at difference of 2 that is stationary
+plot(exports_az_diff2)
+
+
+## ---------------------------------------------------------------------------------
+ts_cor(diff_2(exports))
