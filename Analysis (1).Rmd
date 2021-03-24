@@ -276,7 +276,7 @@ The plot reveals interesting patterns in CPI. Firstly we analyze that inflation 
 ts_seasonal(m2)
 ```
 
-Explaination of decomposition Seasonality: PLEASE EXPLAIn THE PATTERNS @mustafa
+Comparing seasons over the years, growth in M2 has been exponential. January of 2020,reported 18.43m while at the start if the period in January 1990 were $347k. Throughout the time period, seasons of June July have shown the highest growth in M2 while October and November have been consistently stable.
 
 ```{r}
 ts_seasonal(exports)
