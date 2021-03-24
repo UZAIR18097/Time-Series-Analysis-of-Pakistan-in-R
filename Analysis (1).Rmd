@@ -664,15 +664,15 @@ plot(exports_az_level)
 
 
 #Performs the Zivot \& Andrews unit root test, which allows a break at an unknown point in either the intercept, the linear trend or in both.
-#performing on difference 2
+#performing on difference 1
 # H0 :yt =Î¼+ytâ1 +Îµt
-exports_az_diff2 <- ur.za(diff_2(exports) , model="both", lag=2)
-summary(exports_az_diff2)
+exports_az_diff1 <- ur.za(diff_1(exports) , model="both", lag=2)
+summary(exports_az_diff1)
 
 
 
 #at difference of 2 that is stationary
-plot(exports_az_diff2)
+plot(exports_az_diff1)
 
 
-ts_cor(diff_2(exports))
+ts_cor(diff_1(exports))
