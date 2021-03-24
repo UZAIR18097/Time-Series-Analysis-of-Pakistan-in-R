@@ -254,7 +254,7 @@ plot_exports<- function(){
 ```{r}
 plot_exports()
 ```
-The exports show fluctuation between 1991 to 2020. @mustafa continue the analysis.
+The exports show fluctuations between 1991 to 2020 but the general trend has been upwards. In the initial years up till 2002/2003, exports were relatively stable. From then on they have grown but with constant fluctuations that have also risen in magnitude.
 
 
 ```{r}
