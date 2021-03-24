@@ -282,7 +282,7 @@ Comparing seasons over the years, growth in M2 has been exponential. January of 
 ts_seasonal(exports)
 ```
 
-Explaination of Exports plot : Please explain Patterns @mustafa
+It is difficult to identify a consistent pattern in Pakistan's export over the period. Seasons have irregularly faced growth and fall signifying Pakistan's exports are unstable and do not depend much on seasonal factors.
 
 DETERMINATION OF UNIT ROOTS
 TECHNIQUE 1 : VISUALISING BY ACF AND PACF
