@@ -5,7 +5,7 @@ date: "3/20/2021"
 output: html_document
 ---
 
-# Problem Statement
+# Introduction
 Our study is based on the monthly data of Exports, M2 and Consumer Price Index (CPI) of Pakistan. This data was collected from the archives of SBP bulletin.
 The data from January 1992 till February 2021 was used to check whether these aforementioned time series are stationary or non-stationary. If non-stationary, the number of unit roots present in the time series were also calculated.
 Testing data for stationarity is very important in research where the underlying variables based on time. If a series is non-stationary, it means that its variance or mean is dependent on time. With such a process, the effect of the change in the error term at any time will continue to the effect our series.
@@ -59,12 +59,18 @@ $H_1: \rho <1$ This process is trend-stationary
 
 If the first differences of a series are serially correlated we should use the ADF test. However, detection of serial correlation along with appropriate selection lag length remain a difficult task. An alternative way to deal with this problem is the PP test
 
-$Y_t=\phi Y_{t-1}+\varepsilon_t$, $\varepsilon_t \sim I(0)$ with mean $0$
+$Y_t=\phi Y_{t-1}+\varepsilon_t$, 
+
+$\varepsilon_t \sim I(0)$ with mean $0$
 
 Test Procedure:
+
 1. Regress $Y_t$ on $Y_{t-1}$
+
 2. Compute $\tau$
+
 3. "Modify" $\tau$ to get z
+
 4. Under $H_0$, z's asymptotic distribution is the DF distribution for $\tau$
 
 ### KPSS-Test
@@ -75,13 +81,19 @@ $$
 Y_t=r_t+\beta T_t+ \varepsilon _t
 $$
 $H_0: \delta_{u}^2=0$ The series is stationary around a deterministic trend
-$H-1: \delta_{u}^2>0$ The series is non-stationary
+
+$H_1: \delta_{u}^2>0$ The series is non-stationary
+
 $H_0: \beta=0$ The series is stationary around a fixed level
+
 $H_1: \beta>0$ The series is non-stationary
 
 $r_t$ is a random walk process i.e. $r_t=r_{t-1}+u_t$
+
 $u_t$ is iid $\mathcal{N}(0, \delta_{u}^2)$
+
 $\beta T_t$ is a deterministic trend
+
 $\varepsilon _t$ is a stationary error
 
 
@@ -93,10 +105,15 @@ $$
 $$
 Where,
 DU is an indicator dummy variable for a mean shift occuring at each possible break-date
+
 DT is corresponding trend shift variable
+
 1. $DU = 1$ if $t>TB$ and $0$ otherwise
+
 2. $Dt = t-TB$ if $t>TB$ and $0$ otherwise
+
 $H_0: \alpha =0$ The series {${x_t}$} contains a unit root with a drift that excludes any structural break
+
 $H_1: \alpha<0$ The series is a trend-stationary process with a one-time break occurring at an unknown point in time.  
 
 ### ERS test
@@ -243,7 +260,7 @@ The exports show fluctuation between 1991 to 2020. @mustafa continue the analysi
 ```{r}
 ts_decompose(cpi, type = "both")
 ```
-Trend part in CPI is consistently upward and it does not satisfy mean reversion property because the mean CPI tends to change upward.Thus this is the non Stationary Series. Furthemore, there is a clear Seasonsal trend in CPI. We can also see that in global crises there is a shock in Prices as CPI as CPI increased by 34.25% between 2007 and 2009. To further motivate,we made Seasonality plots to explore seasonal effects in CPI
+Trend part in CPI is consistently upward and it does not satisfy mean reversion property because the mean CPI tends to change upward.Thus this is the non Stationary Series. Furthermore, there is a clear Seasonal trend in CPI. We can also see that in global crises there is a shock in Prices as CPI as CPI increased by 34.25% between 2007 and 2009. To further motivate,we made Seasonality plots to explore seasonal effects in CPI
 ```{r}
 ts_decompose(m2, type = "both")
 ```
