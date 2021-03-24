@@ -293,10 +293,6 @@ ts_cor(cpi)
 ```
 The ACF plot shows that CPI series is not Stationary since most of the spikes are out of 5% significant level. This means that mean,variance and covariances are time dependent.
 
-@sahad please document and write the formula for DF with Null and Alternate for all the tests. USE LATEX as taught by Sir in class. Make the overall document professional and presentable.
-
-
-
 AUGMENTED DF on CPI
 
 
