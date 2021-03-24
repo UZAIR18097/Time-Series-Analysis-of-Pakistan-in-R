@@ -4,7 +4,6 @@ author: "Muhammad Uzair Aslam (18097) , Mustafa Qamar Shamim(17988),Sahad Morani
 date: "3/20/2021"
 output: html_document
 ---
-@sahad please make the overall document presentable by adding the problem statement, motivation for study and Results in LATEX form. Make Null and ALTERNATIVE of all the tests by writing the equations in MATHEMATICAL FORM given by SIR.
 
 # Problem Statement
 Our study is based on the monthly data of Exports, M2 and Consumer Price Index (CPI) of Pakistan. This data was collected from the archives of SBP bulletin.
