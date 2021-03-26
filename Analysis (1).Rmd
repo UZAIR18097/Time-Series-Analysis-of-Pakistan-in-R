@@ -209,6 +209,7 @@ plot_cpi<- function(timeseries){
 ```{r}
 plot_cpi()
 ```
+The line graph of the CPI is increasing over time showing an increase in the prices of the goods. After 2015, inflation is increasing with a greater magnitude as compared to the previous years. 
 
 ```{r}
 #below function plots the m2 series in Time Series Studio
@@ -260,14 +261,15 @@ The exports show fluctuations between 1991 to 2020 but the general trend has bee
 ```{r}
 ts_decompose(cpi, type = "both")
 ```
-Trend part in CPI is consistently upward and it does not satisfy mean reversion property because the mean CPI tends to change upward.Thus this is the non Stationary Series. Furthermore, there is a clear Seasonal trend in CPI. We can also see that in global crises there is a shock in Prices as CPI as CPI increased by 34.25% between 2007 and 2009. To further motivate,we made Seasonality plots to explore seasonal effects in CPI
+Trend part in CPI is consistently upward and it does not satisfy mean reversion property because the mean CPI tends to change upward. Thus this is the non Stationary Series. Furthermore, there is a clear Seasonal trend in CPI. We can also see that in global crises there is a shock in Prices as CPI increased by 34.25% between 2007 and 2009. To further motivate,we made Seasonality plots to explore seasonal effects in CPI
 ```{r}
 ts_decompose(m2, type = "both")
 ```
+Trend part in M2 is consistently upwards, thus, it does not satisfy mean reversion property because the mean M2 tends to change upward. Therefore, this is concluded to be a non Stationary Series. Furthermore, there is a clear Seasonal trend in M2. 
 ```{r}
 ts_decompose(exports, type = "both")
 ```
-
+The trend of exports has a bit of variations but the overall trend is moving upwards, thus, it does not satisfy the mean diversion property. Therefore, this is concluded to be a non Stationary Series. Furthermore, there is a clear Seasonal trend in M2.
 ```{r}
 ts_seasonal(cpi)
 ```
@@ -311,7 +313,7 @@ diff_2<- function(series)
 CPI_adf_level=adf.test(cpi)
 CPI_adf_level
 ```
-
+The P-value of the ADF test on level of CPI is 0.99 > 0.05. Thus, we accept the null hypothesis and conclude that this series is non-stationary at level.
 
 ```{r}
 ndiffs(cpi)
@@ -323,6 +325,7 @@ ndiffs(cpi)
 CPI_adf_diff2=adf.test(diff_2(cpi))
 CPI_adf_diff2
 ```
+The P-value of the ADF test on the second difference of CPI is 0.01 < 0.05. Thus, we reject the null hypothesis and conclude that this series is stationary at its second difference.
 
 
 ```{r}
@@ -330,7 +333,7 @@ CPI_adf_diff2
 CPI_df_type1=ur.df(cpi, type = c("none"), lags = 0, selectlags = c("Fixed"))
 CPI_df_type1
 ```
-
+The value of the test statistic is 14.3168 > -1.942 (Critical value of the ADF Test, model 0 at 5% significance). Thus, we accept the null hypothesis that this series is non-stationary.
 
 ```{r}
 #application of Dickey fuller on level with trend and intercept
@@ -338,7 +341,7 @@ CPI_df_type3 <- urca::ur.df(cpi, type = "trend", lags = 0, selectlags = c("Fixed
 urca::summary(CPI_df_type3)
 
 ```
-
+The value of the test statistic is 1.1097 > -3.419 (Critical value of the ADF Test, model 2 at 5% significance). Thus, we accept the null hypothesis and conclude that this series is non-stationary.
 
 ```{r}
 #application of Dickey fuller on second difference with trend and intercept
@@ -346,16 +349,15 @@ CPI_df_type3_diff2 <- urca::ur.df(diff_2(cpi), type = "trend", lags = 0, selectl
 urca::summary(CPI_df_type3_diff2)
 
 ```
-
+The value of the test statistic is -30.076 < -3.419 (Critical value of the ADF Test, model 2 at 5% significance). Thus, we reject the null hypothesis and conclude that this series is stationary.
 
 ```{r}
 #application of Dickey fuller on level with intercept but no trend
 CPI_df_type2 <- urca::ur.df(cpi, type = "drift", lags = 0, selectlags = c("Fixed"))
 urca::summary(CPI_df_type2)
 
-
 ```
-
+The value of the test statistic is 7.1529 > -2.873 (Critical value of the ADF Test, model 1 at 5% significance). Thus, we accept the null hypothesis and conclude that this series is non-stationary.
 
 ```{r}
 #application of Augmented Dickey fuller on second difference
@@ -363,7 +365,7 @@ CPI_df_diff2 <- ur.df(diff_2(cpi), type = c("none"), lags = 0, selectlags = c("F
 CPI_df_diff2
 
 ```
-
+The value of the test statistic is -30.1751 < -1.942 (Critical value of the ADF Test, model 0 at 5% significance). Thus, we reject the null hypothesis and conclude that this series is stationary.
 
 
 ```{r}
@@ -371,7 +373,7 @@ CPI_df_diff2
 CPI_kpss_level <- kpss.test(cpi, null="Trend")
 CPI_kpss_level
 ```
-
+The P-value of this KPSS Test for Trend Stationarity is 0.01 < 0.05. Thus, we reject the null hypothesis and conclude that this series is non-stationary.
 
 ```{r}
 #applying KPSS on difference 2
@@ -379,7 +381,7 @@ CPI_kpss_diff2 <- kpss.test(diff_2(cpi), null="Trend")
 CPI_kpss_diff2
 
 ```
-
+The P-value of this KPSS Test for Trend Stationarity is 0.1 > 0.05. Thus, we accept the null hypothesis and conclude that this series is trend-stationary.
 
 ```{r}
 #applying ERS test for serial correlation on level
@@ -387,7 +389,7 @@ CPI_ers_level <- ur.ers(cpi, type="P-test", model="trend")
 summary(CPI_ers_level)
 
 ```
-
+For the Elliot, Rothenberg and Stock Unit Root Test, the value of the test statistic is 229.551 > 5.62 (at 5% level of significance). Thus, we reject the null hypothesis and conclude that serial correlation does not exist.
 
 ```{r}
 #applying ERS test for serial correlation on difference 2
@@ -395,6 +397,7 @@ CPI_ers_diff2 <- ur.ers(diff_2(cpi), type="P-test", model="trend")
 summary(CPI_ers_diff2)
 
 ```
+For the Elliot, Rothenberg and Stock Unit Root Test, the value of the test statistic is 7.332 > 5.62 (at 5% level of significance). Thus, we reject the null hypothesis and conclude that serial correlation does not exist.
 
 
 ```{r}
@@ -403,6 +406,7 @@ CPI_ers_detrend <- ur.ers(cpi, type="DF-GLS", model="trend")
 summary(CPI_ers_detrend)
 
 ```
+For the Elliot, Rothenberg and Stock Unit Root Test, the value of the test statistic is 0.7866 > -2.89 (at 5% level of significance). Thus, we reject the null hypothesis and conclude that the series is stationary.
 
 
 ```{r}
@@ -411,6 +415,7 @@ CPI_ers_detrend_diff1 <- ur.ers(diff(cpi), type="DF-GLS", model="trend")
 summary(CPI_ers_detrend_diff1)
 
 ```
+For the Elliot, Rothenberg and Stock Unit Root Test, the value of the test statistic is -5.7316 > -2.89 (at 5% level of significance). Thus, we accept the null hypothesis and conclude that the series is non-stationary.
 
 
 ```{r}
@@ -419,7 +424,7 @@ CPI_pp_level <- pp.test(cpi)
 CPI_pp_level
 
 ```
-
+The P-value of Phillips-Perron Unit Root Test is 0.99 > 0.05. Thus, we accept the null hypothesis and conclude that the series is non-stationary.
 
 ```{r}
 #applying Phillip and Perron test on difference 2
@@ -427,7 +432,7 @@ CPI_pp_diff2 <- pp.test(diff_2(cpi))
 CPI_pp_diff2
 ```
 
-
+The P-value of Phillips-Perron Unit Root Test is 0.01 < 0.05. Thus, we reject the null hypothesis and conclude that the series is stationary.
 
 
 ```{r}
@@ -436,8 +441,10 @@ CPI_pp_diff2
 # H0 :yt =Î¼+ytâ1 +Îµt
 CPI_az_level <- ur.za(cpi , model="both", lag=2)
 summary(CPI_az_level)
+```
+The test statistic value of the Zivot-Andrews Unit Root Test is -2.1708 > -5.08 (at 5% level of significance). This shows that the series is non-stationary at level and there is a potential break at position 119
 
-
+```{r}
 #plotting on level
 plot(CPI_az_level)
 
@@ -450,8 +457,9 @@ plot(CPI_az_level)
 # H0 :yt =Î¼+ytâ1 +Îµt
 CPI_az_diff2 <- ur.za(diff_2(cpi) , model="both", lag=2)
 summary(CPI_az_diff2)
-
-
+```
+The test statistic value of the Zivot-Andrews Unit Root Test is -16.7729 < -5.08 (at 5% level of significance). The test reports a rejection of the unit root null in favour of a one time break in the intercept at position 350.
+```{r}
 #at difference of 2 that is stationary
 plot(CPI_az_diff2)
 
@@ -464,100 +472,125 @@ ts_cor(diff_2(cpi))
 
 
 ```
-
+The ACF plot shows that CPI series is Stationary at the second difference since most of the spikes are out of 5% significant level. This means that mean,variance and covariances are time independent.
 
 ```{r}
 ts_cor(m2)
-
-
+```
+The ACF plot shows that M2 series is not Stationary at level since most of the spikes are out of 5% significant level. This means that mean,variance and covariances are time dependent.
+```{r}
 #application of ADF test on m2 with trend and intercept
 #H0: Ï = 1 there is a unit root
 #H1: Ï < 1 the series is stationary
 m2_adf_level=adf.test(m2)
 m2_adf_level
-
-
+```
+The P-value of the ADF test on level of M2 is 0.99 > 0.05. Thus, we accept the null hypothesis and conclude that this series is non-stationary at level.
+```{r}
 ndiffs(m2)
 
 
 #now apply adf on second difference with trend and intercept
 m2_adf_diff2=adf.test(diff_2(m2))
 m2_adf_diff2
-
-
+```
+The P-value of the ADF test on second difference of M2 is 0.01 < 0.05. Thus, we reject the null hypothesis and conclude that this series is stationary at second difference.
+```{r}
 #application of Dickey fuller on level with no trend and no intercept
 m2_df_type1=ur.df(m2, type = c("none"), lags = 0, selectlags = c("Fixed"))
 m2_df_type1
-
+```
+The value of the test statistic is 11.1343 > -1.942 (Critical value of the ADF Test, model 0 at 5% significance). Thus, we accept the null hypothesis that this series is non-stationary.
+```{r}
 #application of Dickey fuller on level with trend and intercept
 m2_df_type3 <- urca::ur.df(m2, type = "trend", lags = 0, selectlags = c("Fixed"))
 urca::summary(m2_df_type3)
+```
+The value of the test statistic is 2.4153 > -3.42 (Critical value of the ADF Test, model 2 at 5% significance). Thus, we accept the null hypothesis and conclude that this series is non-stationary at level.
 
-
+```{r}
 #application of Dickey fuller on second difference with trend and intercept
 m2_df_type3_diff2 <- urca::ur.df(diff_2(m2), type = "trend", lags = 0, selectlags = c("Fixed"))
 urca::summary(m2_df_type3_diff2)
+```
+The value of the test statistic is -32.0662 < -3.42 (Critical value of the ADF Test, model 2 at 5% significance). Thus, we reject the null hypothesis and conclude that this series is stationary at second difference.
 
-
+```{r}
 #application of Dickey fuller on level with intercept but no trend
 m2_df_type2 <- urca::ur.df(m2, type = "drift", lags = 0, selectlags = c("Fixed"))
 urca::summary(m2_df_type2)
-
-
-
+```
+The value of the test statistic is 7.5375 > -2.873 (Critical value of the ADF Test, model 1 at 5% significance). Thus, we accept the null hypothesis and conclude that this series is non-stationary.
+```{r}
 #application of Augmented Dickey fuller on second difference
 m2_df_diff2 <- ur.df(diff_2(m2), type = c("none"), lags = 0, selectlags = c("Fixed"))
 m2_df_diff2
-
-
+```
+The value of the test statistic is -32.1544 < -1.942 (Critical value of the ADF Test, model 0 at 5% significance). Thus, we reject the null hypothesis and conclude that this series is stationary.
+```{r}
 #applying KPSS on level
 m2_kpss_level <- kpss.test(m2, null="Trend")
 m2_kpss_level
+```
+The P-value of this KPSS Test for Trend Stationarity is 0.01 < 0.05. Thus, we reject the null hypothesis and conclude that this series is non-stationary.
 
-
-
+```{r}
 #applying KPSS on difference 2
 m2_kpss_diff2 <- kpss.test(diff_2(m2), null="Trend")
 m2_kpss_diff2
+```
+The P-value of this KPSS Test for Trend Stationarity is 0.1 > 0.05. Thus, we accept the null hypothesis and conclude that this series is stationary.
 
-
-
+```{r}
 #applying ERS test for serial correlation on level
 m2_ers_level <- ur.ers(m2, type="P-test", model="trend")
 summary(m2_ers_level)
+```
+For the Elliot, Rothenberg and Stock Unit Root Test, the value of the test statistic is 2038.528 > 5.62 (at 5% level of significance). Thus, we reject the null hypothesis and conclude that serial correlation does not exist.
 
-
+```{r}
 #applying ERS test for serial correlation on difference 2
 m2_ers_diff2 <- ur.ers(diff_2(m2), type="P-test", model="trend")
 summary(m2_ers_diff2)
+```
+For the Elliot, Rothenberg and Stock Unit Root Test, the value of the test statistic is 160.6301 > 5.62 (at 5% level of significance). Thus, we reject the null hypothesis and conclude that serial correlation does not exist.
 
-
+```{r}
 #applying ELS to detrended data without intercept on level
 m2_ers_detrend <- ur.ers(m2, type="DF-GLS", model="trend")
 summary(m2_ers_detrend)
+```
+For the Elliot, Rothenberg and Stock Unit Root Test, the value of the test statistic is 1.9329 > -2.89 (at 5% level of significance). Thus, we reject the null hypothesis and conclude that the series is stationary.
 
 
+```{r}
 #applying ELS to detrended data without intercept on difference
 m2_ers_detrend_diff1 <- ur.ers(diff(m2), type="DF-GLS", model="trend")
 summary(m2_ers_detrend_diff1)
+```
+For the Elliot, Rothenberg and Stock Unit Root Test, the value of the test statistic is -10.7818 < -2.89 (at 5% level of significance). Thus, we can not reject the null hypothesis and conclude that the series is non-stationary.
 
-
+```{r}
 #applying Phillip and Perron test on level
 m2_pp_level <- pp.test(m2)
 m2_pp_level
-
-
+```
+The P-value of Phillips-Perron Unit Root Test is 0.99 > 0.05. Thus, we accept the null hypothesis and conclude that the series is non-stationary.
+```{r}
 #applying Phillip and Perron test on difference 2
 m2_pp_diff2 <- pp.test(diff_2(m2))
 m2_pp_diff2
-
+```
+The P-value of Phillips-Perron Unit Root Test is 0.01 < 0.05. Thus, we reject the null hypothesis and conclude that the series is stationary.
+```{r}
 #Performs the Zivot \& Andrews unit root test, which allows a break at an unknown point in either the intercept, the linear trend or in both.
 #performing on level
 # H0 :yt =Î¼+ytâ1 +Îµt
 m2_az_level <- ur.za(m2 , model="both", lag=2)
 summary(m2_az_level)
-
-
+```
+The test statistic value of the Zivot-Andrews Unit Root Test is 1.128 > -5.08 (at 5% level of significance). This shows that the series is non-stationary at level and there is a potential break at position 230
+```{r}
 #plotting on level
 plot(m2_az_level)
 
@@ -568,8 +601,10 @@ plot(m2_az_level)
 # H0 :yt =Î¼+ytâ1 +Îµt
 m2_az_diff2 <- ur.za(diff_2(m2) , model="both", lag=2)
 summary(m2_az_diff2)
+```
+The test statistic value of the Zivot-Andrews Unit Root Test is -16.9124 > -5.08 (at 5% level of significance). This shows that the series is stationary at second difference and there is a potential break at position 352
 
-
+```{r}
 #at difference of 2 that is stationary
 plot(m2_az_diff2)
 
