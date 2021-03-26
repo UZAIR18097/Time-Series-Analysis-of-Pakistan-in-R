@@ -616,88 +616,117 @@ ts_cor(diff_2(m2))
 
 ```{r}
 ts_cor(exports)
-
-
+```
+The ACF plot shows that Exports series is not Stationary at level since most of the spikes are out of 5% significant level. This means that mean,variance and covariances are time dependent.
+```{r}
 #application of ADF test on exports with trend and intercept
 #H0: Ï = 1 there is a unit root
 #H1: Ï < 1 the series is stationary
 exports_adf_level=adf.test(exports)
 exports_adf_level
+```
+The P-value of the ADF test on level of Exports is 0.343 > 0.05. Thus, we accept the null hypothesis and conclude that this series is non-stationary at level.
 
-
+```{r}
 ndiffs(exports)
 
 
 #now apply adf on first difference with trend and intercept
 exports_adf_diff2=adf.test(diff(exports))
 exports_adf_diff2
-
-
+```
+The P-value of the ADF test on second difference of Exports is 0.01 < 0.05. Thus, we reject the null hypothesis and conclude that this series is stationary at first difference.
+```{r}
 #application of Dickey fuller on level with no trend and no intercept
 exports_df_type1=ur.df(exports, type = c("none"), lags = 0, selectlags = c("Fixed"))
 exports_df_type1
-
+```
+The value of the test statistic is -0.5803 > -1.942 (Critical value of the ADF Test, model 0 at 5% significance). Thus, we accept the null hypothesis that this series is non-stationary.
+```{r}
 #application of Dickey fuller on level with trend and intercept
 exports_df_type3 <- urca::ur.df(exports, type = "trend", lags = 0, selectlags = c("Fixed"))
 urca::summary(exports_df_type3)
+```
+The value of the test statistic is 6.5274 > -3.42 (Critical value of the ADF Test, model 2 at 5% significance). Thus, we accept the null hypothesis and conclude that this series is non-stationary at level.
 
-
+```{r}
 #application of Dickey fuller on first difference with trend and intercept
 exports_df_type3_diff1 <- urca::ur.df(diff(exports), type = "trend", lags = 0, selectlags = c("Fixed"))
 urca::summary(exports_df_type3_diff1)
+```
+The value of the test statistic is -31.3129 < -3.42 (Critical value of the ADF Test, model 2 at 5% significance). Thus, we reject the null hypothesis and conclude that this series is stationary at first difference.
 
-
+```{r}
 #application of Dickey fuller on level with intercept but no trend
 exports_df_type2 <- urca::ur.df(exports, type = "drift", lags = 0, selectlags = c("Fixed"))
 urca::summary(exports_df_type2)
-
-
+```
+The value of the test statistic is -2.4943 > -2.873 (Critical value of the ADF Test, model 1 at 5% significance). Thus, we accept the null hypothesis and conclude that this series is non-stationary.
+```{r}
 #application of Augmented Dickey fuller on first difference
 exports_df_diff1 <- ur.df(diff(exports), type = c("none"), lags = 0, selectlags = c("Fixed"))
 exports_df_diff1
-
-
+```
+The value of the test statistic is -31.9638 < -2.873 (Critical value of the ADF Test, model 1 at 5% significance). Thus, we reject the null hypothesis and conclude that this series is stationary at first difference.
+```{r}
 #applying KPSS on level
 exports_kpss_level <- kpss.test(exports, null="Trend")
 exports_kpss_level
-
-
+```
+The P-value of this KPSS Test for Trend Stationarity is 0.01 < 0.05. Thus, we reject the null hypothesis and conclude that this series is non-stationary.
+```{r}
 #applying KPSS on difference 1
 exports_kpss_diff1 <- kpss.test(diff(exports), null="Trend")
 exports_kpss_diff1
-
-
+```
+The P-value of this KPSS Test for Trend Stationarity is 0.1 > 0.05. Thus, we accept the null hypothesis and conclude that this series is stationary on first difference.
+```{r}
 #applying ERS test for serial correlation on level
 exports_ers_level <- ur.ers(exports, type="P-test", model="trend")
 summary(exports_ers_level)
-
+```
+For the Elliot, Rothenberg and Stock Unit Root Test, the value of the test statistic is 4.7791 < 5.62 (at 5% level of significance). Thus, we accept the null hypothesis and conclude that serial correlation does exist.
+```{r}
 #applying ERS test for serial correlation on difference 1
 exports_ers_diff1 <- ur.ers(diff(exports), type="P-test", model="trend")
 summary(exports_ers_diff1)
+```
+For the Elliot, Rothenberg and Stock Unit Root Test, the value of the test statistic is 0.003 < 5.62 (at 5% level of significance). Thus, we accept the null hypothesis and conclude that serial correlation does exist.
 
+```{r}
 #applying ELS to detrended data without intercept on level
 exports_ers_detrend <- ur.ers(exports, type="DF-GLS", model="trend")
 summary(exports_ers_detrend)
-
+```
+For the Elliot, Rothenberg and Stock Unit Root Test, the value of the test statistic is -3.3343 < -2.89 (at 5% level of significance). Thus, we accept the null hypothesis and conclude that the series is non-stationary on level.
+```{r}
 #applying ELS to detrended data without intercept on difference
 exports_ers_detrend_diff1 <- ur.ers(diff(exports), type="DF-GLS", model="trend")
 summary(exports_ers_detrend_diff1)
+```
+For the Elliot, Rothenberg and Stock Unit Root Test, the value of the test statistic is -8.7273 < -2.89 (at 5% level of significance). Thus, we accept the null hypothesis and conclude that the series is non-stationary on first difference.
 
+```{r}
 #applying Phillip and Perron test on level
 exports_pp_level <- pp.test(exports)
 exports_pp_level
-
+```
+The P-value of Phillips-Perron Unit Root Test is 0.01 < 0.05. Thus, we reject the null hypothesis and conclude that the series is stationary at level.
+```{r}
 #applying Phillip and Perron test on difference 1
 exports_pp_diff1 <- pp.test(diff(exports))
 exports_pp_diff1
-
+```
+The P-value of Phillips-Perron Unit Root Test is 0.01 < 0.05. Thus, we reject the null hypothesis and conclude that the series is stationary at first difference.
+```{r}
 #Performs the Zivot \& Andrews unit root test, which allows a break at an unknown point in either the intercept, the linear trend or in both.
 #performing on level
 # H0 :yt =Î¼+ytâ1 +Îµt
 exports_az_level <- ur.za(exports , model="both", lag=2)
 summary(exports_az_level)
-
-
+```
+The test statistic value of the Zivot-Andrews Unit Root Test is -4.6112 > -5.08 (at 5% level of significance). This shows that the series is non-stationary at level and there is a potential break at position 230
+```{r}
 #plotting on level
 plot(exports_az_level)
 
@@ -712,6 +741,7 @@ summary(exports_az_diff1)
 
 #at difference of 2 that is stationary
 plot(exports_az_diff1)
-
-
+```
+The test statistic value of the Zivot-Andrews Unit Root Test is -13.1821 < -5.08 (at 5% level of significance). This shows that the series is stationary at first difference and there is a potential break at position 347
+```{r}
 ts_cor(diff(exports))
