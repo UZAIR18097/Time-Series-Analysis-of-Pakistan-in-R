@@ -147,7 +147,7 @@ rm(list = ls())
 
 #below function reads the data from csv file
 read_data <- function(){
-        data <- read.csv("C:\\Users\\HP\\Downloads\\AEdata (1).csv")
+        data <- read.csv("AEdata.csv")
         return(data)
 }
 data<- read_data()
@@ -330,6 +330,7 @@ Next we move on to find the acf and pacf of the series.The motivation is to find
 ts_seasonal(imports)
 ```
 
+## Consumer Price Index
 ```{r}
 ts_cor(cpi)
 ```
@@ -371,7 +372,7 @@ The P-value of the ADF test on the second difference of CPI is 0.01 < 0.05. Thus
 ```{r}
 #application of Dickey fuller on level with no trend and no intercept
 CPI_df_type1=ur.df(cpi, type = c("none"), lags = 0, selectlags = c("Fixed"))
-CPI_df_type1
+summary(CPI_df_type1)
 ```
 The value of the test statistic is 14.3168 > -1.942 (Critical value of the ADF Test, model 0 at 5% significance). Thus, we accept the null hypothesis that this series is non-stationary.
 
@@ -399,12 +400,7 @@ urca::summary(CPI_df_type2)
 ```
 The value of the test statistic is 7.1529 > -2.873 (Critical value of the ADF Test, model 1 at 5% significance). Thus, we accept the null hypothesis and conclude that this series is non-stationary.
 
-```{r}
-#application of Augmented Dickey fuller on second difference
-CPI_df_diff2 <- ur.df(diff_2(cpi), type = c("none"), lags = 0, selectlags = c("Fixed"))
-CPI_df_diff2
 
-```
 The value of the test statistic is -30.1751 < -1.942 (Critical value of the ADF Test, model 0 at 5% significance). Thus, we reject the null hypothesis and conclude that this series is stationary.
 
 
@@ -513,7 +509,7 @@ ts_cor(diff_2(cpi))
 
 ```
 The ACF plot shows that CPI series is Stationary at the second difference since most of the spikes are out of 5% significant level. This means that mean,variance and covariances are time independent.
-
+## Money Supply
 ```{r}
 ts_cor(m2)
 ```
@@ -530,10 +526,14 @@ The P-value of the ADF test on level of M2 is 0.99 > 0.05. Thus, we accept the n
 ndiffs(m2)
 
 
+```
+```{r}
 #now apply adf on second difference with trend and intercept
 m2_adf_diff2=adf.test(diff_2(m2))
 m2_adf_diff2
+
 ```
+
 The P-value of the ADF test on second difference of M2 is 0.01 < 0.05. Thus, we reject the null hypothesis and conclude that this series is stationary at second difference.
 ```{r}
 #application of Dickey fuller on level with no trend and no intercept
@@ -634,25 +634,27 @@ The test statistic value of the Zivot-Andrews Unit Root Test is 1.128 > -5.08 (a
 #plotting on level
 plot(m2_az_level)
 
-
-
+```
+```{r}
 #Performs the Zivot \& Andrews unit root test, which allows a break at an unknown point in either the intercept, the linear trend or in both.
 #performing on difference 2
 # H0 :yt =Î¼+ytâ1 +Îµt
 m2_az_diff2 <- ur.za(diff_2(m2) , model="both", lag=2)
 summary(m2_az_diff2)
 ```
+
 The test statistic value of the Zivot-Andrews Unit Root Test is -16.9124 > -5.08 (at 5% level of significance). This shows that the series is stationary at second difference and there is a potential break at position 352
 
 ```{r}
 #at difference of 2 that is stationary
 plot(m2_az_diff2)
+```
 
-
-
+```{r}
 ts_cor(diff_2(m2))
 ```
 
+## Exports 
 
 ```{r}
 ts_cor(exports)
@@ -669,8 +671,8 @@ The P-value of the ADF test on level of Exports is 0.343 > 0.05. Thus, we accept
 
 ```{r}
 ndiffs(exports)
-
-
+```
+```{r}
 #now apply adf on first difference with trend and intercept
 exports_adf_diff1=adf.test(diff(exports))
 exports_adf_diff1
@@ -787,6 +789,7 @@ The test statistic value of the Zivot-Andrews Unit Root Test is -13.1821 < -5.08
 ts_cor(diff(exports))
 ```
 
+## Imports
 ```{r}
 #application of ADF test on imports with trend and intercept
 #H0: Ï = 1 there is a unit root
@@ -918,6 +921,5 @@ The test statistic value of the Zivot-Andrews Unit Root Test is -13.9544 < -5.08
 ```{r}
 ts_cor(diff(imports))
 ```
-
-```
+Finally, the PACF and ACF bars are declining which shows that the imports series has is stationary at first difference that is it is I(1) process.
 
