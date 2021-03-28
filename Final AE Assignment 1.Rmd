@@ -151,7 +151,7 @@ rm(list = ls())
 
 #below function reads the data from csv file
 read_data <- function(){
-        data <- read.csv("AEdata.csv")
+        data <- read.csv("AEdata (1).csv")
         return(data)
 }
 data<- read_data()
@@ -308,11 +308,11 @@ Trend part in M2 is consistently upwards, thus, it does not satisfy mean reversi
 ```{r}
 ts_decompose(exports, type = "both")
 ```
-The trend of exports has a bit of variations but the overall trend is moving upwards, thus, it does not satisfy the mean diversion property. Therefore, this is concluded to be a non Stationary Series. Furthermore, there is a clear Seasonal trend in M2.
+The trend of exports has a bit of variations but the overall trend is moving upwards, thus, it does not satisfy the mean diversion property. Therefore, this is concluded to be a non Stationary Series. Furthermore, there is a clear Seasonal trend in exports.
 ```{r}
 ts_decompose(imports, type = "both")
 ```
-
+The trend of imports is upwards, thus, it does not satisfy the mean diversion property. Therefore, this is concluded to be a non Stationary Series. Furthermore, there is a clear Seasonal trend in imports.
 ```{r}
 ts_seasonal(cpi)
 ```
@@ -332,17 +332,15 @@ It is difficult to identify a consistent pattern in Pakistan's export over the p
 ```{r}
 ts_seasonal(imports)
 ```
-
-DETERMINATION OF UNIT ROOTS
-TECHNIQUE 1 : VISUALISING BY ACF AND PACF
-Next we move on to find the acf and pacf of the series.The motivation is to find the stationarity of the series. So we plot them one by one
+Seasonality in follow an upredictable pattern similar to that of exports. But in the June-July season exports are often at their peak during these years. The rest of the seasons are fairly inconsistent.
 
 
 ## Consumer Price Index
 ```{r}
+#acf and pacf plots for CPI
 ts_cor(cpi)
 ```
-The ACF plot shows that CPI series is not Stationary since most of the spikes are out of 5% significant level. This means that mean,variance and covariances are time dependent.
+The ACF plot shows that CPI series is not Stationary since most of the spikes are out of 5% significant level. This means that mean,variance and covariance are time dependent.
 
 AUGMENTED DF on CPI
 
@@ -365,6 +363,7 @@ CPI_adf_level
 The P-value of the ADF test on level of CPI is 0.99 > 0.05. Thus, we accept the null hypothesis and conclude that this series is non-stationary at level.
 
 ```{r}
+#how many differences will eliminate unit root
 ndiffs(cpi)
 ```
 
