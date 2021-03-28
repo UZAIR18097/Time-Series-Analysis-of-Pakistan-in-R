@@ -4,8 +4,9 @@ author: "Muhammad Uzair Aslam (18097) , Mustafa Qamar Shamim(17988), Sahad Moran
 date: "3/28/2021"
 output: html_document
 ---
+# Stationarity Analysis of Key Indicators in Pakistan's Economy
 
-# Introduction
+## Introduction
 Our study is based on the monthly data of Exports, Imports, M2 and Consumer Price Index (CPI) of Pakistan. This data was collected from the archives of SBP bulletin.
 The data from January 1992 till February 2021 was used to check whether these aforementioned time series are stationary or non-stationary. If non-stationary, the number of unit roots present in the time series were also calculated.
 Testing data for stationarity is very important in research where the underlying variables based on time. If a series is non-stationary, it means that its variance or mean is dependent on time. With such a process, the effect of the change in the error term at any time will continue to the effect our series.
@@ -332,7 +333,7 @@ It is difficult to identify a consistent pattern in Pakistan's export over the p
 ```{r}
 ts_seasonal(imports)
 ```
-Seasonality in follow an upredictable pattern similar to that of exports. But in the June-July season exports are often at their peak during these years. The rest of the seasons are fairly inconsistent.
+Seasonality in follow an unpredictable pattern similar to that of exports. But in the June-July season exports are often at their peak during these years. The rest of the seasons are fairly inconsisten.
 
 
 ## Consumer Price Index
@@ -931,3 +932,8 @@ ts_cor(diff(imports))
 ```
 Finally, the PACF and ACF bars are declining which shows that the imports series has is stationary at first difference that is it is I(1) process.
 
+## Conclusion
+
+Our analysis using the various unit root tests and plots have shown that all the test variables are non-stationary at level. Imports and exports are stationary at the first difference, while CPI and M2 are stationary at the second difference. 
+
+The detrended series with unit roots removed are ready for further analysis and can be used to forecast figures for future months through suitable model fitting. 
