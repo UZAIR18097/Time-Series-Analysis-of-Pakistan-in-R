@@ -76,11 +76,23 @@ plot_forecast(imports_predictions)
 
 #check residuals of all fitted models and conclude by Ljung-Box test
 checkresiduals(inflation_fit)
+#The first and the last graph shows us that the residuals appear to be white noise (variables are independent and identically distributed with a mean of zero) and the second graph confirms it.
+#There is a lag which goes above the 10% threshold, however, the other ones die out.
 checkresiduals(ipilsm_fit)
+#It seems that the model left some information in the residuals. The first and the last graph shows us that the residuals do not appear to be white noise but to have some correlation amongst them and the second graph confirms it. 
+#Few of these lags go above the 10% threshold and they do not seem to die out with time.
 checkresiduals(tbr_fit)
+#It seems that the model left some information in the residuals. The first and the last graph shows us that the residuals do not appear to be white noise but to have some correlation amongst them and the second graph confirms it. 
+#Few of these lags go above the 10% threshold and they do not seem to die out with time.
 checkresiduals(m2_fit)
+#The initial values of the first and second graph shows us that the errors are independent of each other with a mean of zero. However, there seem to be some correlation between the error terms after the 12th lag
+#The initial lags fall within the threshold, however, after 12 years many of these lags go above the 10% threshold and they do not seem to die out with time.
 checkresiduals(exports_fit)
+#The initial values of the first and second graph shows us that the errors are independent of each other with a mean of zero. However, there seem to be some correlation between the error terms after the 20th lag
+#The initial lags fall within the threshold, however, after 20 years many of these lags go above the 10% threshold and they do not seem to die out with time.
 checkresiduals(imports_fit)
+#The first and the last graph shows us that the residuals appear to be white noise (variables are independent and identically distributed with a mean of zero) and the second graph confirms it.
+#There are few lags which goes above the 10% threshold, however, the other ones die out with time.
 
 #plot training with test data
 inflation_fit %>%
