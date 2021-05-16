@@ -1,7 +1,7 @@
 #########################################################################################
-#AUTHOR : MUHAMMAD UZAIR ASLAM(18097)
+#AUTHOR : MUHAMMAD UZAIR ASLAM(18097) MUSTAFA QAMAR SHAMIM (17988) SAHAD MORANI (18000)
 #TITLE  : VAR ANALYSIS ON PAKISTAN CPI , M2 and Industrial Production
-#GROUP MEMBERS : MUSTAFA SHAMIM, SHAHAD MOORANI
+
 #########################################################################################
 
 #In this file we plan to explore short run effects by detrended CPI,M2 and Industrial Production
