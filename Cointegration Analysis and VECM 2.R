@@ -1,7 +1,6 @@
 #########################################################################################
-#AUTHOR : MUHAMMAD UZAIR ASLAM(18097)
+#AUTHORS : MUHAMMAD UZAIR ASLAM(18097) MUSTAFA QAMAR SHAMIM (17988), SAHAD MOORANI (18000)
 #TITLE  : VAR ANALYSIS ON PAKISTAN CPI , M2 and Industrial Production
-#GROUP MEMBERS : MUSTAFA SHAMIM, SHAHAD MOORANI
 #########################################################################################
 
 
